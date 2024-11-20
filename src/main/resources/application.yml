@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: gateway
+  profiles:
+    active: dev
+  cloud:
+    gateway:
+      routes:
+        - id: member
+          uri: lb://MEMBER
+          predicates:
+            - Path=/auth/**
+#          filters:
+#            - name: AuthorizationHeaderFilter
+#              args:
+#                pre: true
+#                post: false
+        - id: member-test
+          uri: lb://MEMBER
+          predicates:
+            - Path=/test/**
+          filters:
+            - name: AuthorizationHeaderFilter
+              args:
+                headerName: Authorization
+                granted: Bearer
+
+#
+#        - id: order-service
+#          uri: lb://order-service
+#          predicates:
+#            - Path=/order-service/**
+#          filters:
+#            - StripPrefix=1
+server:
+  port: 8080

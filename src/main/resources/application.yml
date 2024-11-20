@@ -24,6 +24,15 @@ spring:
               args:
                 headerName: Authorization
                 granted: Bearer
+        - id: ledger-server
+          uri: lb://LEDGER
+          predicates:
+            - Path=/ledger/**
+          filters:
+            - name: AuthorizationHeaderFilter
+              args:
+                headerName: Authorization
+                granted: Bearer
 
 #
 #        - id: order-service

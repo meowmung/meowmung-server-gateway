@@ -1,0 +1,9 @@
+jwt:
+  secret: rlarrkaksruemfkddldmldurtmqdlekee
+
+eureka:
+  client:
+    register-with-eureka: true #유레카 서버에 등록할지 여부
+    fetch-registry: true #유레카 서버의 정보를 가져올지 여부
+    service-url.defaultZone: http://admin123:admin123@localhost:8761/eureka
+#    http://아이디:비밀번호@아이피:8761/eureka #유레카 서버 주소

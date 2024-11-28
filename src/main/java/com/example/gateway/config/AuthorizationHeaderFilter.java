@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-
 @Component
 @Slf4j
 public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<AuthorizationHeaderFilter.Config> {
@@ -39,11 +38,12 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
                         log.info("Token is valid");
 
                         Map<String, Object> userInfo = jwtUtils.parseToken(token);
-                        addAuthorizationHeaders(exchange.getRequest(), userInfo);
+//                        addAuthorizationHeaders(exchange. getRequest(), userInfo);
+                        ServerWebExchange mutatedExchange = addAuthorizationHeaders(exchange, userInfo);
 
                         log.info("User Info added to headers: {}", userInfo);
 
-                        return chain.filter(exchange);
+                        return chain.filter(mutatedExchange);
                     }
                     log.warn("Token is invalid");
 
@@ -63,15 +63,16 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         return exchange.getResponse().setComplete();
     }
 
-    private void addAuthorizationHeaders(ServerHttpRequest request, Map<String, Object> userInfo) {
-        request.mutate()
+    private ServerWebExchange addAuthorizationHeaders(ServerWebExchange exchange, Map<String, Object> userInfo) {
+        ServerHttpRequest mutatedRequest = exchange.getRequest().mutate()
                 .header("X-Authorization-nickname", userInfo.get("nickname").toString())
                 .header("X-Authorization-email", userInfo.get("email").toString())
-                .header("X-Authorization-memberId", userInfo.get("userId").toString())
+                .header("X-Authorization-memberId", userInfo.get("memberId").toString())
                 .build();
-        System.out.println(request.getHeaders());
+        return exchange.mutate().request(mutatedRequest).build(); // 변경된 요청 반영
     }
 
+    //        System.out.println(request.getHeaders());
     // Config할 inner class -> 설정파일에 있는 args
     @Getter
     @Setter

@@ -38,7 +38,7 @@ public class JwtUtils {
         }
     }
 
-    public Map<String, Object>  parseToken(String token) {
+    public Map<String, Object> parseToken(String token) {
         // JWT 토큰을 파싱하여 Claims를 추출
         Claims claims = Jwts.parser()
                 .setSigningKey(key)
@@ -50,8 +50,9 @@ public class JwtUtils {
         // "memberId"라는 클레임이 있다고 가정
         return Map.of(
                 "email", claims.getSubject(), // 필요에 따라 추가
-                "nickname", claims.get("nickname")
-                );
+                "nickname", claims.get("nickname"),
+                "memberId", claims.get("userId")
+        );
     }
 
 }

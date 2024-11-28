@@ -7,16 +7,12 @@ spring:
     gateway:
       routes:
         - id: member
-          uri: lb://MEMBER
+          uri: http://localhost:8081
           predicates:
             - Path=/auth/**
-#          filters:
-#            - name: AuthorizationHeaderFilter
-#              args:
-#                pre: true
-#                post: false
+
         - id: member-test
-          uri: lb://MEMBER
+          uri: http://localhost:8081
           predicates:
             - Path=/test/**
           filters:
@@ -24,8 +20,9 @@ spring:
               args:
                 headerName: Authorization
                 granted: Bearer
+
         - id: ledger-server
-          uri: lb://LEDGER
+          uri: http://localhost:8083
           predicates:
             - Path=/ledger/**
           filters:
@@ -33,13 +30,5 @@ spring:
               args:
                 headerName: Authorization
                 granted: Bearer
-
-#
-#        - id: order-service
-#          uri: lb://order-service
-#          predicates:
-#            - Path=/order-service/**
-#          filters:
-#            - StripPrefix=1
 server:
   port: 8080

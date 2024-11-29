@@ -21,6 +21,28 @@ spring:
                 headerName: Authorization
                 granted: Bearer
 
+        - id: board
+          uri: http://localhost:8082
+          predicates:
+            - Path=/boards/**
+          filters:
+            - name: AuthorizationHeaderFilter
+              args:
+                headerName: Authorization
+                granted: Bearer
+
+        - id: board-pages-no-filter
+          uri: http://localhost:8082
+          predicates:
+            - Path=/boards/{category}/pages
+            - Method=GET  # GET 요청에 대해서만 필터를 제외
+
+        - id: board-post-no-filter
+          uri: http://localhost:8082
+          predicates:
+            - Path=/boards/{category}/{postId}
+            - Method=GET  # GET 요청에 대해서만 필터를 제외
+
         - id: ledger-server
           uri: http://localhost:8083
           predicates:

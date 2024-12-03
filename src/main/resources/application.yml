@@ -5,6 +5,21 @@ spring:
     active: dev
   cloud:
     gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowCredentials: false
+            allowedOrigins:
+              - "*"
+#              - http://192.168.1.43:3000
+            allowedHeaders:
+              - "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
       routes:
         - id: member
           uri: http://localhost:8081
@@ -21,6 +36,19 @@ spring:
                 headerName: Authorization
                 granted: Bearer
 
+        - id: board-pages-no-filter
+          uri: http://localhost:8082
+          predicates:
+            - Path=/boards/{boardCategory}/pages
+            - Method=GET  # GET 요청에 대해서만 필터를 제외
+
+        - id: board-post-no-filter
+          uri: http://localhost:8082
+          predicates:
+            - Path=/boards/{boardCategory}/{postId}
+            - Method=GET  # GET 요청에 대해서만 필터를 제외
+
+
         - id: board
           uri: http://localhost:8082
           predicates:
@@ -30,18 +58,6 @@ spring:
               args:
                 headerName: Authorization
                 granted: Bearer
-
-        - id: board-pages-no-filter
-          uri: http://localhost:8082
-          predicates:
-            - Path=/boards/{category}/pages
-            - Method=GET  # GET 요청에 대해서만 필터를 제외
-
-        - id: board-post-no-filter
-          uri: http://localhost:8082
-          predicates:
-            - Path=/boards/{category}/{postId}
-            - Method=GET  # GET 요청에 대해서만 필터를 제외
 
         - id: ledger-server
           uri: http://localhost:8083

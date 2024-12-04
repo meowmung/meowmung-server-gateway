@@ -68,5 +68,31 @@ spring:
               args:
                 headerName: Authorization
                 granted: Bearer
+
+        - id: insurance-server
+          uri: http://localhost:8084
+          predicates:
+            - Path=/insurance/**
+
+        - id: pet-server
+          uri: http://localhost:8086
+          predicates:
+            - Path=/pet/**
+          filters:
+            - name: AuthorizationHeaderFilter
+              args:
+                headerName: Authorization
+                granted: Bearer
+
+        - id: admin-server
+          uri: http://localhost:8090
+          predicates:
+            - Path=/admin/**
+          filters:
+            - name: AuthorizationHeaderFilter
+              args:
+                headerName: Authorization
+                granted: Bearer
+
 server:
   port: 8080

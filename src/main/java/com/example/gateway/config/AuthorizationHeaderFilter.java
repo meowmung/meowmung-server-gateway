@@ -65,10 +65,11 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 
     private ServerWebExchange addAuthorizationHeaders(ServerWebExchange exchange, Map<String, Object> userInfo) {
         ServerHttpRequest mutatedRequest = exchange.getRequest().mutate()
-                .header("X-Authorization-nickname", userInfo.get("nickname").toString())
                 .header("X-Authorization-email", userInfo.get("email").toString())
+                .header("X-Authorization-nickname", userInfo.get("nickname").toString())
                 .header("X-Authorization-memberId", userInfo.get("memberId").toString())
                 .build();
+        log.info("Mutated Request Headers: {}", mutatedRequest.getHeaders());
         return exchange.mutate().request(mutatedRequest).build(); // 변경된 요청 반영
     }
 
